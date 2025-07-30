@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>3桁の計算課題</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 200px; }
+    button { margin: 50px; padding: 10px 20px; font-size: 40px; }
+    #quiz {
+      font-family: 'Courier New', monospace;
+      font-size: 70px;
+      font-weight: 600;
+      letter-spacing: 2px;
+    }
+    #result { font-size: 40px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>3桁の計算課題</h1>
+  <div id="quiz"></div>
+  <div id="choices"></div>
+  <div id="result"></div>
+
+  <script>
+    function generateQuiz() {
+      const a = Math.floor(Math.random() * 900) + 100;
+      const b = Math.floor(Math.random() * 900) + 100;
+      const correct = a + b;
+      const choices = [correct];
+      
+      while (choices.length < 4) {
+        let offset = Math.floor(Math.random() * 50 - 25);
+        let wrong = correct + offset;
+        
+        while (wrong % 10 !== correct % 10 || choices.includes(wrong) || wrong <= 0) {
+          offset = Math.floor(Math.random() * 50 - 25);
+          wrong = correct + offset;
+        }
+        choices.push(wrong)
+      }
+
+      choices.sort(() => Math.random() - 0.5);
+
+      document.getElementById('quiz').textContent = `${a} + ${b} = ?`;
+      const choicesDiv = document.getElementById('choices');
+      choicesDiv.innerHTML = '';
+      document.getElementById('result').textContent = '';
+
+      choices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.textContent = choice;
+        btn.onclick = () => {
+          const result = document.getElementById('result');
+          result.textContent = (choice === correct) ? '○ 正解！' : '× 不正解';
+          result.style.color = (choice === correct) ? 'green' : 'red';
+          setTimeout(() => generateQuiz(), 800);
+        };
+        choicesDiv.appendChild(btn);
+      });
+    }
+
+    generateQuiz();
+  </script>
+</body>
+</html>
